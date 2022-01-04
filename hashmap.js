@@ -1,4 +1,4 @@
-const DEFAULT_BUCKETS_LENGTH = 50
+const BUCKETS_LENGTH = 50
 
 const IteratorEnum = Object.freeze({
     Entries: 0,
@@ -7,10 +7,12 @@ const IteratorEnum = Object.freeze({
 })
 
 export class HashMap {
-    constructor(length = DEFAULT_BUCKETS_LENGTH) {
-        this.bucketsLength = length
-        this.buckets = this.getEmptyBuckets(this.bucketsLength)
+    constructor(data) {
+        this.bucketsLength = BUCKETS_LENGTH
+        this.buckets = this.resetBuckets()
         this.size = 0
+
+        this.init(data)
     }
 
     hash(key) {
@@ -65,7 +67,7 @@ export class HashMap {
     }
 
     clear() {
-        this.buckets = this.getEmptyBuckets(this.bucketsLength)
+        this.buckets = this.resetBuckets()
     }
 
     keys() {
@@ -86,8 +88,14 @@ export class HashMap {
         }
     }
 
-    getEmptyBuckets(length) {
-        return Array.from({ length }, () => ([]))
+    init(data) {
+        for (const [key, value] of data) {
+            this.set(key, value)
+        }
+    }
+
+    resetBuckets() {
+        return Array.from({ length: this.bucketsLength }, () => ([]))
     }
 
     *[Symbol.iterator](type = IteratorEnum.Entries) {
@@ -100,10 +108,10 @@ export class HashMap {
                 switch (type) {
                     case IteratorEnum.Keys:
                         yield cell[0]
-                        break;
+                        break
                     case IteratorEnum.Values:
                         yield cell[1]
-                        break;
+                        break
                     default:
                         yield cell
                 }

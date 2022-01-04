@@ -1,1 +1,1 @@
-## Simple Hash Table implementation
+## Simple Hash Map implementation
